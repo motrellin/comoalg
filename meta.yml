@@ -1,0 +1,108 @@
+fullname: Template for Coq-Projects on Github
+shortname: comoproj
+branch: main
+organization: motrellin
+
+action: true
+action_appendix: |2-
+            before_install: |-
+              startGroup "Print opam config"
+                opam config list; opam repo list; opam list
+              endGroup
+
+              startGroup "Build _CoqProject"
+                sudo chown -R coq:coq .
+                make _CoqProject
+              endGroup
+            after_script: |-
+              make coqdoc
+              cp resources/index.md html/index.md
+        - name: Setup Pages
+          uses: actions/configure-pages@v5
+        - name: Build with Jekyll
+          uses: actions/jekyll-build-pages@v1
+          with:
+            source: ./html
+            destination: ./_site
+        - name: Revert Coq user permissions
+          # to avoid a warning at cleanup time
+          if: ${{ always() }}
+          run: sudo chown -R 1001:116 .
+        - name: Upload Artifact
+          uses: actions/upload-pages-artifact@v3
+          with:
+            path: "./_site"
+    deploy:
+      needs: build
+
+      # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+      permissions:
+        pages: write      # to deploy to Pages
+        id-token: write   # to verify the deployment originates from an appropriate source
+
+      # Deploy to the github-pages environment
+      environment:
+        name: github-pages
+        url: ${{ steps.deployment.outputs.page_url }}
+
+      # Specify runner + deployment step
+      runs-on: ubuntu-latest
+      steps:
+        - name: Deploy to GitHub Pages
+          id: deployment
+          uses: actions/deploy-pages@v4 # or specific "vX.X.X" version tag for this action
+
+community: false
+coqdoc: true
+submodule: true #At least for coqdocjs
+synopsis: A dummy template for Github Coq-Projects
+description: |
+  No special package. Just used to illustrate a possible template for 
+  Github Coq-Projects.
+
+#chat:
+
+authors:
+  - name: Max Ole Elliger
+    initial: true
+    email: ole.elliger@fau.de
+maintainers:
+  - name: Max Ole Elliger
+    nickname: motrellin
+
+license:
+  fullname: GNU General Public License v3.0 or later
+  identifier: GPL-3.0-or-later
+
+supported_coq_versions:
+  text: Developed for 8.19.0
+  opam: '{ "8.19" }'
+
+#namespace: CoMoTemplTest
+
+dependencies:
+  - description: Coq Equations
+    opam:
+      name: coq-equations
+
+namespace: CoMoProj
+
+make_target: all
+
+documentation: |-
+  ## Documentation
+
+  This project contains a template for Github Coq-Projects. It aims to combine
+  several helpful approaches:
+  - [Auto-Generating _CoqProject](https://gitlab.cs.fau.de/oc59yqul/template-coq)
+  - [Generic repository infrastructure](https://github.com/coq-community/templates)
+  - [CoqdocJS](https://github.com/coq-community/coqdocjs)
+
+#index_documentation:
+
+coqdoc_index: ./toc.html
+
+opam-file-maintainer: ole.elliger@fau.de
+
+tested_coq_opam_versions:
+  - version: '8.19'
