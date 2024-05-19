@@ -1,5 +1,5 @@
-fullname: Template for Coq-Projects on Github
-shortname: comoproj
+fullname: Notes on Algebra
+shortname: comoalg
 branch: main
 organization: motrellin
 
@@ -55,10 +55,10 @@ action_appendix: |2-
 community: false
 coqdoc: true
 submodule: true #At least for coqdocjs
-synopsis: A dummy template for Github Coq-Projects
+synopsis: A library for typical algebra topics, e.g. group theory
 description: |
-  No special package. Just used to illustrate a possible template for 
-  Github Coq-Projects.
+  This projects aims to state some standard algebraic concepts.
+  It should also serve as a personal collection of notes.
 
 #chat:
 
@@ -78,25 +78,11 @@ supported_coq_versions:
   text: Developed for 8.19.0
   opam: '{ "8.19" }'
 
-#namespace: CoMoTemplTest
-
-dependencies:
-  - description: Coq Equations
-    opam:
-      name: coq-equations
-
-namespace: CoMoProj
+namespace: CoMoAlg
 
 make_target: all
 
-documentation: |-
-  ## Documentation
-
-  This project contains a template for Github Coq-Projects. It aims to combine
-  several helpful approaches:
-  - [Auto-Generating _CoqProject](https://gitlab.cs.fau.de/oc59yqul/template-coq)
-  - [Generic repository infrastructure](https://github.com/coq-community/templates)
-  - [CoqdocJS](https://github.com/coq-community/coqdocjs)
+#documentation: |-
 
 #index_documentation:
 

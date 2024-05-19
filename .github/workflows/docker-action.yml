@@ -1,0 +1,79 @@
+# This file was generated from `meta.yml`, please do not edit manually.
+# Follow the instructions on https://github.com/coq-community/templates to regenerate.
+name: Docker CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  build:
+    # the OS must be GNU/Linux to be able to use the docker-coq-action
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        image:
+          - 'coqorg/coq:8.19'
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - uses: coq-community/docker-coq-action@v1
+        with:
+          opam_file: 'coq-comoalg.opam'
+          custom_image: ${{ matrix.image }}
+          before_install: |-
+            startGroup "Print opam config"
+              opam config list; opam repo list; opam list
+            endGroup
+
+            startGroup "Build _CoqProject"
+              sudo chown -R coq:coq .
+              make _CoqProject
+            endGroup
+          after_script: |-
+            make coqdoc
+            cp resources/index.md html/index.md
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Build with Jekyll
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./html
+          destination: ./_site
+      - name: Revert Coq user permissions
+        # to avoid a warning at cleanup time
+        if: ${{ always() }}
+        run: sudo chown -R 1001:116 .
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "./_site"
+  deploy:
+    needs: build
+
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    # Specify runner + deployment step
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4 # or specific "vX.X.X" version tag for this action
+
+# See also:
+# https://github.com/coq-community/docker-coq-action#readme
+# https://github.com/erikmd/docker-coq-github-action-demo
