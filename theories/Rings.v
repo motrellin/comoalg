@@ -16,6 +16,12 @@ Class Ring :=
         carreq (mul (op x y) z) (op (mul x z) (mul y z))
   }.
 
+Declare Scope ring_scope.
+
+Infix "*" := mul : ring_scope.
+
+Open Scope ring_scope.
+
 Module Z.
 
   Import Groups.Abelian.Integers.

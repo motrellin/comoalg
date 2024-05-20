@@ -8,16 +8,22 @@ Class Group :=
     op_combat :: Proper (carreq ==> carreq ==> carreq) op;
     op_assoc :
       forall x y z,
-        carreq (op x (op y z)) (op (op x y) z);
+        (op x (op y z)) =s= (op (op x y) z);
     neutr : carr;
     op_neutr_l : 
       forall x, 
-        carreq (op neutr x) x;
+        (op neutr x) =s= x;
     inv : carr -> carr;
     op_inv_l : 
       forall x, 
-        carreq (op (inv x) x) neutr
+        (op (inv x) x) =s= neutr
   }.
+
+Declare Scope group_scope.
+
+Infix "*" := op : group_scope.
+
+Open Scope group_scope.
 
 Section Group_Properties.
 
@@ -25,7 +31,7 @@ Section Group_Properties.
 
   Lemma op_inv_r : 
     forall x,
-      carreq (op x (inv x)) neutr.
+      (x * (inv x)) =s= neutr.
   Proof.
     intros x.
     rewrite <- op_neutr_l.
@@ -44,7 +50,7 @@ Section Group_Properties.
 
   Lemma op_neutr_r : 
     forall x,
-      carreq (op x neutr) x.
+    x * neutr =s= x.
   Proof.
     intros x.
     rewrite <- op_inv_l.
@@ -56,8 +62,8 @@ Section Group_Properties.
 
   Lemma neutr_unique : 
     forall e,
-      (forall x, carreq (op e x) x) ->
-      carreq e neutr.
+      (forall x, e * x =s= x) ->
+      e =s= neutr.
   Proof.
     intros e H1.
     rewrite <- op_neutr_r with (x := e).
@@ -67,8 +73,8 @@ Section Group_Properties.
 
   Lemma inv_unique : 
     forall x i,
-      carreq (op i x) neutr ->
-      carreq i (inv x).
+      (i * x) =s= neutr ->
+      i =s= (inv x).
   Proof.
     intros x i H1.
     rewrite <- op_neutr_r with (x := i).
@@ -81,8 +87,8 @@ Section Group_Properties.
 
   Lemma shorten_l : 
     forall x y z,
-      carreq (op x z) (op y z) ->
-      carreq x y.
+      x * z =s= y * z ->
+      x =s= y.
   Proof.
     intros * H1.
     rewrite <- op_neutr_r with (x := x).
@@ -97,8 +103,8 @@ Section Group_Properties.
 
   Lemma shorten_r : 
     forall x y z,
-      carreq (op x y) (op x z) ->
-      carreq y z.
+      x * y =s= x * z ->
+      y =s= z.
   Proof.
     intros * H1.
     rewrite <- op_neutr_l with (x := y).
@@ -112,7 +118,7 @@ Section Group_Properties.
   Qed.
 
   Lemma inv_neutr : 
-    carreq (inv neutr) neutr.
+    (inv neutr) =s= neutr.
   Proof.
     symmetry.
     apply inv_unique.
@@ -122,7 +128,7 @@ Section Group_Properties.
 
   Lemma inv_op : 
     forall x y,
-      carreq (inv (op x y)) (op (inv y) (inv x)).
+      inv (x * y) =s= (inv y) * (inv x).
   Proof.
     intros x y.
     apply shorten_l with (z := op x y).

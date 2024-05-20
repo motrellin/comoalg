@@ -5,7 +5,7 @@ From CoMoAlg Require Export Groups.Morphisms.
     base_Setoid := {|
       carr := carr;
       carreq x y:=
-        carreq (@morph G H phi x) (@morph G H phi y)
+        @morph _ _ phi x =s= @morph _ _ phi y
     |};
     op := op;
     neutr := neutr;
@@ -92,8 +92,7 @@ Section Noether.
 
   Lemma Noether_commut :
     forall x,
-      carreq
-      (morph x)
+      (morph x) =s=
       (@morph _ _ (comp (equiv_Morph_inj f) (equiv_Morph_surj f)) x).
   Proof.
     reflexivity.
@@ -101,8 +100,8 @@ Section Noether.
 
   Theorem Noether_inj : 
     forall x y,
-      carreq (@morph _ _ (equiv_Morph_inj f) x) (@morph _ _ (equiv_Morph_inj f) y) ->
-      carreq x y.
+      (@morph _ _ (equiv_Morph_inj f) x) =s= (@morph _ _ (equiv_Morph_inj f) y) ->
+      x =s= y.
   Proof.
     intros x y H1.
     simpl in *.

@@ -8,7 +8,16 @@ Class Abelian_Group :=
         carreq (op x y) (op y x)
   }.
 
+Declare Scope abelian_scope.
+
+Infix "+" := op : abelian_scope.
+Notation "- x" := (inv x) : abelian_scope.
+
+Open Scope abelian_scope.
+
 Module Integers.
+
+  Open Scope nat_scope.
 
   Definition Z : Type := nat*nat.
 

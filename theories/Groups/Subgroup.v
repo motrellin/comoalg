@@ -28,13 +28,13 @@ Section subgroup.
           fun xp yp =>
           let (x,hxp) := xp in
           let (y,hyp) := yp in
-          carreq x y
+          x =s= y
         |};
       op := 
         fun xp yp =>
         let (x,hxp) := xp in
         let (y,hyp) := yp in
-        exist _ (op x y) (op_preserve x y hxp hyp);
+        exist _ (x * y) (op_preserve x y hxp hyp);
       neutr := exist _ neutr neutr_preserve;
       inv :=
         fun xp =>

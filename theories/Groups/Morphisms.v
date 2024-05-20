@@ -6,7 +6,7 @@ Class Morph (domain codomain : Group) :=
     morph_combat :: Proper (carreq ==> carreq) morph;
     morph_op :
       forall x y,
-        carreq (morph (@op domain x y)) (@op codomain (morph x) (morph y))
+        morph (x * y) =s= (morph x) * (morph y)
   }.
 
 Module Group_Morph_trivial.
