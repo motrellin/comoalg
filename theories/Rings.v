@@ -2,7 +2,7 @@ From CoMoAlg Require Export Abelian.
 
 Class Ring :=
   {
-    base_group :: Abelian_Group;
+    base_Abelian :: Abelian_Group;
     mul : carr -> carr -> carr;
     mul_combat :: Proper (carreq ==> carreq ==> carreq) mul;
     mul_assoc :
@@ -34,7 +34,7 @@ Module Z.
   Instance Z_Ring : Ring.
   Proof.
     refine {|
-      base_group := Z_Group;
+      base_Abelian := Z_Group;
       mul := mulZ
     |}.
     -

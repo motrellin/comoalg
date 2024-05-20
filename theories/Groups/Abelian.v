@@ -2,7 +2,7 @@ From CoMoAlg Require Export Groups.
 
 Class Abelian_Group :=
   {
-    base_group :: Group;
+    base_Group :: Group;
     op_comm : 
       forall x y,
         carreq (op x y) (op y x)
@@ -41,7 +41,7 @@ Module Integers.
   Instance Z_Group : Abelian_Group.
   Proof.
     unshelve refine {|
-      base_group := {|
+      base_Group := {|
         base_Setoid := {|
           carr := Z;
           carreq := diffeq
