@@ -1,4 +1,4 @@
-From CoMoAlg Require Export Groups.Morphisms.
+From CoMoAlg Require Export Groups.
 
 Generalizable Variables G H.
 
