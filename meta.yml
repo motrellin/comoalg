@@ -16,13 +16,15 @@ action_appendix: |2-
               endGroup
             after_script: |-
               make coqdoc
-              cp resources/index.md html/index.md
+              mkdir public
+              cp -r html public/docs
+              cp resources/index.md public/index.md
         - name: Setup Pages
           uses: actions/configure-pages@v5
         - name: Build with Jekyll
           uses: actions/jekyll-build-pages@v1
           with:
-            source: ./html
+            source: ./public
             destination: ./_site
         - name: Revert Coq user permissions
           # to avoid a warning at cleanup time
@@ -86,7 +88,7 @@ make_target: all
 
 #index_documentation:
 
-coqdoc_index: ./toc.html
+coqdoc_index: ./docs/toc.html
 
 opam-file-maintainer: ole.elliger@fau.de
 

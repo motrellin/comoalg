@@ -32,7 +32,7 @@ The current stable release of Notes on Algebra can be [downloaded from GitHub](h
 
 ## Documentation
 
-The coqdoc presentation of the source files can be browsed [here](./toc.html)
+The coqdoc presentation of the source files can be browsed [here](./docs/toc.html)
 
 Related publications, if any, are listed below.
 

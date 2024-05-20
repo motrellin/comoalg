@@ -12,7 +12,7 @@ Follow the instructions on https://github.com/coq-community/templates to regener
 
 
 [coqdoc-shield]: https://img.shields.io/badge/docs-coqdoc-blue.svg
-[coqdoc-link]: https://motrellin.github.io/comoalg/./toc.html
+[coqdoc-link]: https://motrellin.github.io/comoalg/./docs/toc.html
 
 
 This projects aims to state some standard algebraic concepts.
