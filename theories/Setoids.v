@@ -1,4 +1,4 @@
-Require Export RelationClasses.
+From Coq Require Export RelationClasses.
 
 Class Setoid :=
   {

@@ -1,5 +1,4 @@
 From CoMoAlg Require Export Setoids.
-
 From Coq Require Export Bool Setoid Lia Morphisms.
 
 Class Group :=
