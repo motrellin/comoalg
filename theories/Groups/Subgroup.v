@@ -2,7 +2,7 @@ From CoMoAlg Require Export Groups.
 
 Section subgroup.
 
-  Context (G : Group).
+  Context `(Group).
   Context (subgroup : carr -> Prop).
   
   Hypothesis op_preserve :

@@ -1,6 +1,8 @@
 From CoMoAlg Require Export Groups.Morphisms.
 
-#[refine] Instance equiv_Group {G H : Group} (phi : @Morph G H) : Group :=
+Generalizable Variables G H.
+
+#[refine] Instance equiv_Group `(phi : Morph) : Group :=
   {|
     base_Setoid := {|
       carr := carr;
@@ -51,9 +53,7 @@ Proof.
      reflexivity.
 Defined.
 
-Print equiv_Group.
-
-Definition equiv_Morph_surj {G H : Group} (f : Morph G H) : Morph G (equiv_Group f).
+Definition equiv_Morph_surj `(f : @Morph G H) : Morph G (equiv_Group f).
 Proof.
   refine {|
     morph := fun x => _
@@ -65,11 +65,10 @@ Proof.
     eassumption.
   -
     intros x y.
-    apply morph_combat.
     reflexivity.
 Defined.
 
-Definition equiv_Morph_inj {G H : Group} (f : Morph G H) : Morph (equiv_Group f) H.
+Definition equiv_Morph_inj `(f : @Morph G H) : Morph (equiv_Group f) H.
 Proof.
   refine {|
     morph := fun x => _
@@ -86,9 +85,7 @@ Defined.
 
 Section Noether.
 
-  Context {G : Group}.
-  Context {H : Group}.
-  Context (f : @Morph G H).
+  Context `(f : Morph).
 
   Lemma Noether_commut :
     forall x,

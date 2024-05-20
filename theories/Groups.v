@@ -27,7 +27,7 @@ Open Scope group_scope.
 
 Section Group_Properties.
 
-  Context `{G : Group}.
+  Context `{Group}.
 
   Lemma op_inv_r : 
     forall x,
