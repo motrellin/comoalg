@@ -16,7 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *)
 
-From CoMoAlg Require Export Abelian.
+From CoMoAlg Require Export Groups.
 
 Class Ring :=
   {
@@ -42,7 +42,7 @@ Open Scope ring_scope.
 
 Module Z.
 
-  Import Groups.Abelian.Integers.
+  Import Groups.Integers.
 
   Definition mulZ (x y : Z) : Z :=
     let (a,b) := x in
