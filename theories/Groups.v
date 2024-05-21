@@ -19,6 +19,8 @@
 From CoMoAlg Require Export Setoids.
 From Coq Require Export Bool Setoid Lia Morphisms.
 
+Generalizable Variables F G H.
+
 (** * Groups *)
 
 Class Group :=
@@ -261,7 +263,7 @@ Module Group_Morph_trivial.
 
 End Group_Morph_trivial.
 
-Instance comp {F G H : Group} (g : Morph G H) (f : Morph F G) : Morph F H.
+Instance comp `(g : @Morph G H) `(f : @Morph F G) : Morph F H.
 Proof with auto.
   refine {|
     morph := fun f => morph (morph f)
