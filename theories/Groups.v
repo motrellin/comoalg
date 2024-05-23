@@ -51,6 +51,12 @@ Section Group_Properties.
 
   Context `{Group}.
 
+  Lemma carr_inhabited : inhabited carr.
+  Proof.
+    constructor.
+    exact neutr.
+  Qed.
+
   Lemma op_inv_r : 
     forall x,
       (x * (inv x)) =s= neutr.
