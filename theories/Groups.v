@@ -251,6 +251,39 @@ Class Morph (domain codomain : Group) :=
         morph (x * y) =s= (morph x) * (morph y)
   }.
 
+Section Morph_Properties.
+
+  Context `{Morph}.
+
+  Lemma morph_neutr :
+    morph neutr =s= neutr.
+  Proof.
+    Check shorten_l.
+    symmetry.
+    apply shorten_l with (z := morph (neutr)).
+    transitivity (morph neutr).
+    apply op_neutr_l.
+    transitivity (morph (neutr * neutr)).
+    rewrite op_neutr_l; reflexivity.
+    apply morph_op.
+  Qed.
+
+  Lemma morph_inv : 
+    forall g,
+      morph (inv g) =s= inv (morph g).
+  Proof.
+    intros g.
+    apply shorten_l with (z := morph g).
+    transitivity neutr.
+    rewrite <- morph_op.
+    rewrite op_inv_l.
+    exact morph_neutr.
+    symmetry.
+    apply op_inv_l.
+  Qed.
+
+End Morph_Properties.
+
 Module Group_Morph_trivial.
 
   Instance trivial_Morph (G H : Group) : Morph G H.
