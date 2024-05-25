@@ -323,11 +323,6 @@ Proof.
     f_equiv.
   -
     intros.
-    (*
-       (g (f (x + y))) 
-       = g (f (x) + f (y))
-       = g (f (x)) + g(f (y))
-     *)
     simpl.
     etransitivity.
 

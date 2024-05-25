@@ -48,11 +48,6 @@ Proof.
       all: assumption.
   -
     intros x1 x2 H1 y1 y2 H2.
-    (*
-       H1 : phi x1 = phi x2
-       H2 : phi y1 = phi y2
-       zZ : phi (x1 + y1) = phi (x2 + y2)
-     *)
     rewrite morph_op.
     rewrite H1, H2.
     rewrite <- morph_op.
