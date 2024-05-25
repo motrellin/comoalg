@@ -17,7 +17,7 @@
  *)
 
 From CoMoAlg Require Export Setoids.
-From Coq Require Export Bool Setoid Lia Morphisms.
+From Coq Require Export Bool Setoid Lia.
 
 Generalizable Variables F G H.
 
@@ -244,12 +244,13 @@ End Integers.
 
 Class Morph (domain codomain : Group) :=
   {
-    morph : @carr (@base_Setoid domain) -> @carr (@base_Setoid codomain);
-    morph_combat :: Proper (carreq ==> carreq) morph;
+    base_Morph :: Setoid_Morph (@base_Setoid domain) (@base_Setoid codomain);
     morph_op :
       forall x y,
         morph (x * y) =s= (morph x) * (morph y)
   }.
+
+Print morph.
 
 Section Morph_Properties.
 
@@ -288,9 +289,9 @@ Module Group_Morph_trivial.
 
   Instance trivial_Morph (G H : Group) : Morph G H.
   Proof.
-    refine {|
-      morph := fun x => neutr
-    |}.
+    repeat unshelve econstructor.
+    -
+      intro; exact neutr.
     -
       intros x y H1.
       reflexivity.
@@ -303,10 +304,13 @@ Module Group_Morph_trivial.
 End Group_Morph_trivial.
 
 Instance comp `(g : @Morph G H) `(f : @Morph F G) : Morph F H.
-Proof with auto.
-  refine {|
-    morph := fun f => morph (morph f)
-  |}.
+Proof.
+  repeat unshelve econstructor.
+  -
+    intro x.
+    apply morph.
+    apply morph.
+    exact x.
   -
     intros x y H1.
     rewrite H1.
@@ -318,10 +322,126 @@ Proof with auto.
        = g (f (x) + f (y))
        = g (f (x)) + g(f (y))
      *)
+    simpl.
     etransitivity.
 
     apply morph_combat.
     apply morph_op.
 
     apply morph_op.
+Defined.
+
+Instance Auto_Group `{G : Group} : Group.
+Proof.
+  unshelve refine {|
+    base_Setoid := {|
+      carr := {phi : Morph G G & bijective (@base_Morph _ _ phi)};
+      carreq :=
+        fun phi psi =>
+        let f := @morph _ _ (@base_Morph _ _ (projT1 phi)) in
+        let g := @morph _ _ (@base_Morph _ _ (projT1 psi)) in
+        forall x,
+          f x =s= g x
+    |};
+    op :=
+      fun phi psi =>
+      let f := projT1 phi in
+      let g := projT1 psi in
+      existT _ (comp f g) _
+  |}.
+  -
+    split.
+    +
+      repeat intro;
+      reflexivity.
+    +
+      repeat intro;
+      symmetry;
+      auto.
+    +
+      repeat intro;
+      etransitivity;
+      eauto.
+  -
+    destruct phi as [phi H1], psi as [psi H3].
+    subst f g.
+    destruct H1 as [phi' [H1 H2]], H3 as [psi' [H3 H4]].
+    red.
+    unshelve eexists {|
+      morph := fun x => @morph _ _ psi' (@morph _ _ phi' x)
+    |}.
+    +
+      intros x y H5.
+      rewrite H5.
+      reflexivity.
+    +
+      split.
+      *
+        intros x.
+        simpl.
+        rewrite H3.
+        rewrite H1.
+        reflexivity.
+      *
+        intros x.
+        simpl.
+        rewrite H2.
+        rewrite H4.
+        reflexivity.
+  -
+    simpl.
+    unshelve eexists {|
+      base_Morph := {|
+        morph := fun x => x
+      |}
+    |}.
+    +
+      easy.
+    +
+      reflexivity.
+    +
+      unshelve eexists {|
+        morph := fun x => x
+      |}.
+      *
+        easy.
+      *
+        split; reflexivity.
+  -
+    simpl.
+    intros [phi H1].
+    destruct H1 as [phi' [H1 H2]].
+    unshelve eexists {|
+      base_Morph := phi'
+    |}.
+    +
+      intros x y.
+      symmetry.
+      rewrite <- (H2 (morph x * morph y)).
+      rewrite morph_op.
+      rewrite H1.
+      rewrite H1.
+      reflexivity.
+    +
+      simpl.
+      exists (@base_Morph _ _ phi).
+      split; assumption.
+  -
+    simpl.
+    intros x1 y1 H1 x2 y2 H2 x. 
+    simpl in *.
+    rewrite H1,H2.
+    reflexivity.
+  -
+    simpl.
+    reflexivity.
+  -
+    simpl.
+    reflexivity.
+  -
+    simpl.
+    intros phi x.
+    destruct phi as [phi [phi' [H1 H2]]].
+    rewrite H2.
+    reflexivity.
 Defined.

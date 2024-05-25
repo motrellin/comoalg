@@ -21,7 +21,7 @@ From CoMoAlg Require Export Groups.
 Class Ring :=
   {
     base_Abelian :: Abelian_Group;
-    mul : carr -> carr -> carr;
+    mul : (@carr (@base_Setoid (@base_Group base_Abelian))) -> (@carr (@base_Setoid (@base_Group base_Abelian))) -> (@carr (@base_Setoid (@base_Group base_Abelian)));
     mul_combat :: Proper (carreq ==> carreq ==> carreq) mul;
     mul_assoc :
       forall x y z,

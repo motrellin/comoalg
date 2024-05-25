@@ -16,7 +16,9 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *)
 
-From Coq Require Export RelationClasses.
+From Coq Require Export RelationClasses Morphisms.
+
+Generalizable Variables X Y.
 
 Class Setoid :=
   {
@@ -30,3 +32,15 @@ Declare Scope setoid_scope.
 Infix "=s=" := carreq (at level 70) : setoid_scope.
 
 Open Scope setoid_scope.
+
+Class Setoid_Morph (X Y : Setoid) := 
+  {
+    morph : @carr X -> @carr Y; 
+    morph_combat :: Proper (carreq ==> carreq) morph
+  }.
+
+Definition bijective {X Y} (f : Setoid_Morph X Y) :=
+  {g : Setoid_Morph Y X |
+    (forall y, @morph _ _ f (@morph _ _ g y) =s= y) /\
+    (forall x, @morph _ _ g (@morph _ _ f x) =s= x)
+  }.
