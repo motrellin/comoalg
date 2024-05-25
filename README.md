@@ -47,6 +47,3 @@ cd comoalg
 make all  # or make -j <number-of-cores-on-your-machine> all
 make install
 ```
-
-
-

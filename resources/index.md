@@ -44,6 +44,3 @@ Related publications, if any, are listed below.
 ## Authors and contributors
 
 - Max Ole Elliger (initial)
-
-
-
