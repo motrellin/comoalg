@@ -25,7 +25,7 @@ Generalizable Variables G H.
     base_Setoid := {|
       carr := carr;
       carreq x y:=
-        @morph _ _ (@base_Morph _ _ phi) x =s= @morph _ _ (@base_Morph _ _ phi) y
+        @morph _ _ phi x =s= @morph _ _ phi y
     |};
     op := op;
     neutr := neutr;
@@ -99,7 +99,7 @@ Proof.
   |}.
   -
     simpl in *.
-    apply (@morph _ _ (@base_Morph _ _ f)).
+    apply (@morph _ _ f).
     exact x.
   -
     intros x y H1.
@@ -118,14 +118,14 @@ Section Noether.
   Lemma Noether_commut :
     forall x,
       (morph x) =s=
-      (@morph _ _ (@base_Morph _ _ (comp (equiv_Morph_inj f) (equiv_Morph_surj f))) x).
+      (@morph _ _ (comp (equiv_Morph_inj f) (equiv_Morph_surj f)) x).
   Proof.
     reflexivity.
   Qed.
 
   Theorem Noether_inj : 
     forall x y,
-      (@morph _ _ (@base_Morph _ _ (equiv_Morph_inj f)) x) =s= (@morph _ _ (@base_Morph _ _ (equiv_Morph_inj f)) y) ->
+      (@morph _ _ (equiv_Morph_inj f) x) =s= (@morph _ _ (equiv_Morph_inj f) y) ->
       x =s= y.
   Proof.
     intros x y H1.

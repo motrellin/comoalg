@@ -41,6 +41,8 @@ Class Group :=
         (op (inv x) x) =s= neutr
   }.
 
+Coercion base_Setoid : Group >-> Setoid.
+
 Declare Scope group_scope.
 
 Infix "*" := op : group_scope.
@@ -184,6 +186,8 @@ Class Abelian_Group :=
         x * y =s= y * x
   }.
 
+Coercion base_Group : Abelian_Group >-> Group.
+
 Declare Scope abelian_scope.
 
 Infix "+" := op : abelian_scope.
@@ -244,11 +248,13 @@ End Integers.
 
 Class Morph (domain codomain : Group) :=
   {
-    base_Morph :: Setoid_Morph (@base_Setoid domain) (@base_Setoid codomain);
+    base_Morph :: Setoid_Morph domain codomain;
     morph_op :
       forall x y,
         morph (x * y) =s= (morph x) * (morph y)
   }.
+
+Coercion base_Morph : Morph >-> Setoid_Morph.
 
 Print morph.
 
@@ -335,11 +341,11 @@ Instance Auto_Group `{G : Group} : Group.
 Proof.
   unshelve refine {|
     base_Setoid := {|
-      carr := {phi : Morph G G & bijective (@base_Morph _ _ phi)};
+      carr := {phi : Morph G G & bijective phi};
       carreq :=
         fun phi psi =>
-        let f := @morph _ _ (@base_Morph _ _ (projT1 phi)) in
-        let g := @morph _ _ (@base_Morph _ _ (projT1 psi)) in
+        let f := @morph _ _ (projT1 phi) in
+        let g := @morph _ _ (projT1 psi) in
         forall x,
           f x =s= g x
     |};
@@ -424,7 +430,7 @@ Proof.
       reflexivity.
     +
       simpl.
-      exists (@base_Morph _ _ phi).
+      exists phi.
       split; assumption.
   -
     simpl.

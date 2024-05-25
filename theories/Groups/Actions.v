@@ -22,7 +22,7 @@ Generalizable Variables G X Y.
 
 Class Action (G : Group) (X : Setoid) :=
   {
-    action : @carr (@base_Setoid G) -> @carr X -> @carr X;
+    action : @carr G -> @carr X -> @carr X;
     action_combat :: Proper (carreq ==> carreq ==> carreq) action;
     action_neutr : 
       forall x,
