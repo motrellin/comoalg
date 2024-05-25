@@ -27,7 +27,7 @@ Section subgroup.
     forall x y,
       subgroup x ->
       subgroup y -> 
-      subgroup (op x y).
+      subgroup (x * y).
 
   Hypothesis neutr_preserve :
     subgroup neutr.

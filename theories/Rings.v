@@ -18,6 +18,8 @@
 
 From CoMoAlg Require Export Groups.
 
+Open Scope abelian_scope.
+
 Class Ring :=
   {
     base_Abelian :: Abelian_Group;
@@ -25,13 +27,13 @@ Class Ring :=
     mul_combat :: Proper (carreq ==> carreq ==> carreq) mul;
     mul_assoc :
       forall x y z,
-        carreq (mul x (mul y z)) (mul (mul x y) z);
+        (mul x (mul y z)) =s= (mul (mul x y) z);
     mul_op_distr_1 :
       forall x y z,
-        carreq (mul x (op y z)) (op (mul x y) (mul x z));
+        mul x (y + z) =s= (mul x y) + (mul x z);
     mul_op_distr_2 : 
       forall x y z,
-        carreq (mul (op x y) z) (op (mul x z) (mul y z))
+        mul (x + y) z =s= (mul x z) + (mul y z)
   }.
 
 Coercion base_Abelian : Ring >-> Abelian_Group.

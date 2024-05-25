@@ -68,7 +68,7 @@ Section Group_Properties.
     rewrite <- op_inv_l with (x := inv x) at 1.
     remember (inv x) as y.
     remember (inv y) as z.
-    transitivity (op z (op (op y x) y)).
+    transitivity (z * (y * x * y)).
     repeat rewrite op_assoc.
     reflexivity.
     subst.
@@ -161,7 +161,7 @@ Section Group_Properties.
       inv (x * y) =s= (inv y) * (inv x).
   Proof.
     intros x y.
-    apply shorten_l with (z := op x y).
+    apply shorten_l with (z := x * y).
     rewrite op_inv_l.
     transitivity (op (inv y) y).
     rewrite op_inv_l; reflexivity.

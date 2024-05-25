@@ -29,7 +29,7 @@ Class Action (G : Group) (X : Setoid) :=
         carreq (action neutr x) x;
     action_assoc : 
       forall g2 g1 x,
-        carreq (action (op g2 g1) x) (action g2 (action g1 x))
+        carreq (action (g2 * g1) x) (action g2 (action g1 x))
   }.
 
 #[refine] Instance trivial_Action {G : Group} {X : Setoid} : Action G X :=
@@ -76,7 +76,7 @@ Defined.
 Definition orbit `(Action) (x : carr) : carr -> Prop :=
   fun y =>
   exists g,
-    carreq y (action g x).
+    y =s= (action g x).
 
 Example trivial_Action_orbit `{Group} `{Setoid} :
   forall x y,
