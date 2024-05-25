@@ -31,7 +31,7 @@ Class Ring :=
     mul_op_distr_1 :
       forall x y z,
         mul x (y + z) =s= (mul x y) + (mul x z);
-    mul_op_distr_2 : 
+    mul_op_distr_2 :
       forall x y z,
         mul (x + y) z =s= (mul x z) + (mul y z)
   }.

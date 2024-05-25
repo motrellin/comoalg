@@ -22,11 +22,11 @@ Section subgroup.
 
   Context `(Group).
   Context (subgroup : carr -> Prop).
-  
+
   Hypothesis op_preserve :
     forall x y,
       subgroup x ->
-      subgroup y -> 
+      subgroup y ->
       subgroup (x * y).
 
   Hypothesis neutr_preserve :
@@ -42,13 +42,13 @@ Section subgroup.
     unshelve refine {|
       base_Setoid := {|
         carr := {x : carr | subgroup x};
-        carreq := 
+        carreq :=
           fun xp yp =>
           let (x,hxp) := xp in
           let (y,hyp) := yp in
           x =s= y
         |};
-      op := 
+      op :=
         fun xp yp =>
         let (x,hxp) := xp in
         let (y,hyp) := yp in

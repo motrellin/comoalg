@@ -24,8 +24,8 @@ Generalizable Variables X Y.
 
 In this algebraic approach, we use _Setoids_ instead of normal sets as a base
 for further algebraic structures. This has the advantage of adding an equality
-relation [carreq] on top of the carrier [carr]. One effect of this will be, that 
-the typical isomorphism between the image of some homomorphism [f] and the 
+relation [carreq] on top of the carrier [carr]. One effect of this will be, that
+the typical isomorphism between the image of some homomorphism [f] and the
 factor group of the kernel will become trivial.
  *)
 
@@ -43,13 +43,13 @@ Open Scope setoid_scope.
 
 (** * Morphisms
 
-Morphisms between Setoids are just normal functions [morph] between the 
+Morphisms between Setoids are just normal functions [morph] between the
 carriers, that must be compatible with the equatily relations [carreq].
  *)
 
-Class Setoid_Morph (X Y : Setoid) := 
+Class Setoid_Morph (X Y : Setoid) :=
   {
-    morph : @carr X -> @carr Y; 
+    morph : @carr X -> @carr Y;
     morph_combat :: Proper (carreq ==> carreq) morph
   }.
 

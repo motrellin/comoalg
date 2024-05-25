@@ -118,7 +118,7 @@ Section Noether.
     reflexivity.
   Qed.
 
-  Theorem Noether_inj : 
+  Theorem Noether_inj :
     forall x y,
       (@morph _ _ (equiv_Morph_inj f) x) =s= (@morph _ _ (equiv_Morph_inj f) y) ->
       x =s= y.

@@ -30,7 +30,7 @@ should be associatve, see [op_assoc].
 
 A group also has some (left) neutral element [neutr] s.t. [op_neutr_l] holds.
 
-For every element [g] of the group, there exists some (left) inverse [inv g] 
+For every element [g] of the group, there exists some (left) inverse [inv g]
 s.t. [op_inv_l] holds.
  *)
 
@@ -43,12 +43,12 @@ Class Group :=
       forall x y z,
         (op x (op y z)) =s= (op (op x y) z);
     neutr : carr;
-    op_neutr_l : 
-      forall x, 
+    op_neutr_l :
+      forall x,
         (op neutr x) =s= x;
     inv : carr -> carr;
-    op_inv_l : 
-      forall x, 
+    op_inv_l :
+      forall x,
         (op (inv x) x) =s= neutr
   }.
 
@@ -72,7 +72,7 @@ Section Group_Properties.
   Qed.
 
   (** There is no diference between left and right inverses. *)
-  Lemma op_inv_r : 
+  Lemma op_inv_r :
     forall x,
       (x * (inv x)) =s= neutr.
   Proof.
@@ -92,7 +92,7 @@ Section Group_Properties.
   Qed.
 
   (** There is no diference between a left and right neutral element. *)
-  Lemma op_neutr_r : 
+  Lemma op_neutr_r :
     forall x,
     x * neutr =s= x.
   Proof.
@@ -105,7 +105,7 @@ Section Group_Properties.
   Qed.
 
   (** The neutral element is unique. *)
-  Lemma neutr_unique : 
+  Lemma neutr_unique :
     forall e,
       (forall x, e * x =s= x) ->
       e =s= neutr.
@@ -117,7 +117,7 @@ Section Group_Properties.
   Qed.
 
   (** For every element of a group, the inverse of it is unique. *)
-  Lemma inv_unique : 
+  Lemma inv_unique :
     forall x i,
       (i * x) =s= neutr ->
       i =s= (inv x).
@@ -131,7 +131,7 @@ Section Group_Properties.
     reflexivity.
   Qed.
 
-  Lemma shorten_l : 
+  Lemma shorten_l :
     forall x y z,
       x * z =s= y * z ->
       x =s= y.
@@ -147,7 +147,7 @@ Section Group_Properties.
     reflexivity.
   Qed.
 
-  Lemma shorten_r : 
+  Lemma shorten_r :
     forall x y z,
       x * y =s= x * z ->
       y =s= z.
@@ -164,7 +164,7 @@ Section Group_Properties.
   Qed.
 
   (** The inverse of the neutral element is itself. *)
-  Lemma inv_neutr : 
+  Lemma inv_neutr :
     (inv neutr) =s= neutr.
   Proof.
     symmetry.
@@ -173,7 +173,7 @@ Section Group_Properties.
     reflexivity.
   Qed.
 
-  Lemma inv_op : 
+  Lemma inv_op :
     forall x y,
       inv (x * y) =s= (inv y) * (inv x).
   Proof.
@@ -202,7 +202,7 @@ declared by [op_comm].
 Class Abelian_Group :=
   {
     base_Group :: Group;
-    op_comm : 
+    op_comm :
       forall x y,
         x * y =s= y * x
   }.
@@ -223,7 +223,7 @@ Module Integers.
   Definition Z : Type := nat*nat.
 
   Inductive diffeq : relation Z :=
-    | diffeq_1 : 
+    | diffeq_1 :
         forall a b c d,
           a + d = b + c ->
           diffeq (a,b) (c,d).
@@ -348,7 +348,7 @@ Section Morph_Properties.
     apply morph_op.
   Qed.
 
-  Lemma morph_inv : 
+  Lemma morph_inv :
     forall g,
       morph (inv g) =s= inv (morph g).
   Proof.
@@ -462,7 +462,7 @@ Proof.
       split; assumption.
   -
     simpl.
-    intros x1 y1 H1 x2 y2 H2 x. 
+    intros x1 y1 H1 x2 y2 H2 x.
     simpl in *.
     rewrite H1,H2.
     reflexivity.

@@ -24,10 +24,10 @@ Class Action (G : Group) (X : Setoid) :=
   {
     action : @carr G -> @carr X -> @carr X;
     action_combat :: Proper (carreq ==> carreq ==> carreq) action;
-    action_neutr : 
+    action_neutr :
       forall x,
         carreq (action neutr x) x;
-    action_assoc : 
+    action_assoc :
       forall g2 g1 x,
         carreq (action (g2 * g1) x) (action g2 (action g1 x))
   }.
@@ -44,7 +44,7 @@ Class Equivariance `(@Action G X) `(@Action G Y) :=
   {
     equivariance : @carr X -> @carr Y;
     equivariance_combat :: Proper (carreq ==> carreq) equivariance;
-    equivariance_action : 
+    equivariance_action :
       forall g x,
         carreq (equivariance (action g x)) (action g (equivariance x))
   }.
