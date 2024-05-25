@@ -21,7 +21,18 @@ From Coq Require Export Bool Setoid Lia.
 
 Generalizable Variables F G H.
 
-(** * Groups *)
+(** * Groups
+
+A [Group] is defined on top of some base [Setoid] (via [base_Setoid]). It
+consists of some operation [op], which is (again) compatible with the equality
+relations [carreq] of the carriers [carr], see [op_combat]. This operation
+should be associatve, see [op_assoc].
+
+A group also has some (left) neutral element [neutr] s.t. [op_neutr_l] holds.
+
+For every element [g] of the group, there exists some (left) inverse [inv g] 
+s.t. [op_inv_l] holds.
+ *)
 
 Class Group :=
   {
@@ -41,24 +52,26 @@ Class Group :=
         (op (inv x) x) =s= neutr
   }.
 
+(* Some stuff on notations: *)
 Coercion base_Setoid : Group >-> Setoid.
-
 Declare Scope group_scope.
-
 Infix "*" := op : group_scope.
-
 Open Scope group_scope.
+
+(** ** Properties of Groups *)
 
 Section Group_Properties.
 
   Context `{Group}.
 
+  (** There is no empty group. *)
   Lemma carr_inhabited : inhabited carr.
   Proof.
     constructor.
     exact neutr.
   Qed.
 
+  (** There is no diference between left and right inverses. *)
   Lemma op_inv_r : 
     forall x,
       (x * (inv x)) =s= neutr.
@@ -78,6 +91,7 @@ Section Group_Properties.
     reflexivity.
   Qed.
 
+  (** There is no diference between a left and right neutral element. *)
   Lemma op_neutr_r : 
     forall x,
     x * neutr =s= x.
@@ -90,6 +104,7 @@ Section Group_Properties.
     reflexivity.
   Qed.
 
+  (** The neutral element is unique. *)
   Lemma neutr_unique : 
     forall e,
       (forall x, e * x =s= x) ->
@@ -101,6 +116,7 @@ Section Group_Properties.
     reflexivity.
   Qed.
 
+  (** For every element of a group, the inverse of it is unique. *)
   Lemma inv_unique : 
     forall x i,
       (i * x) =s= neutr ->
@@ -147,6 +163,7 @@ Section Group_Properties.
     reflexivity.
   Qed.
 
+  (** The inverse of the neutral element is itself. *)
   Lemma inv_neutr : 
     (inv neutr) =s= neutr.
   Proof.
@@ -176,7 +193,11 @@ Section Group_Properties.
 
 End Group_Properties.
 
-(** * Abelian Groups *)
+(** * Abelian Groups
+
+An Abelian Group is a [Group] whose operation [op] is _commutative_. This is
+declared by [op_comm].
+ *)
 
 Class Abelian_Group :=
   {
@@ -186,12 +207,14 @@ Class Abelian_Group :=
         x * y =s= y * x
   }.
 
+(* Again some notation: *)
 Coercion base_Group : Abelian_Group >-> Group.
-
 Declare Scope abelian_scope.
-
 Infix "+" := op : abelian_scope.
 Notation "- x" := (inv x) : abelian_scope.
+
+(** ** Examples of Abelian Groups *)
+(** *** Integers *)
 
 Module Integers.
 
@@ -244,7 +267,11 @@ Module Integers.
 
 End Integers.
 
-(** * Group Morphisms *)
+(** * Group Morphisms
+
+Group Morphisms are Setoid Morphism that respect the equality relations
+[carreq] which is declared via [morph_op].
+ *)
 
 Class Morph (domain codomain : Group) :=
   {
@@ -256,7 +283,53 @@ Class Morph (domain codomain : Group) :=
 
 Coercion base_Morph : Morph >-> Setoid_Morph.
 
-Print morph.
+(** ** Examples *)
+(** *** Trivial Morphisms *)
+
+Module Group_Morph_trivial.
+
+  Instance trivial_Morph (G H : Group) : Morph G H.
+  Proof.
+    repeat unshelve econstructor.
+    -
+      intro; exact neutr.
+    -
+      intros x y H1.
+      reflexivity.
+    -
+      intros.
+      rewrite (op_neutr_l).
+      reflexivity.
+  Defined.
+
+End Group_Morph_trivial.
+
+(** *** Composition of morphisms *)
+
+Instance comp `(g : @Morph G H) `(f : @Morph F G) : Morph F H.
+Proof.
+  repeat unshelve econstructor.
+  -
+    intro x.
+    apply morph.
+    apply morph.
+    exact x.
+  -
+    intros x y H1.
+    rewrite H1.
+    f_equiv.
+  -
+    intros.
+    simpl.
+    etransitivity.
+
+    apply morph_combat.
+    apply morph_op.
+
+    apply morph_op.
+Defined.
+
+(** ** Properties of Group Morphisms *)
 
 Section Morph_Properties.
 
@@ -291,47 +364,7 @@ Section Morph_Properties.
 
 End Morph_Properties.
 
-Module Group_Morph_trivial.
-
-  Instance trivial_Morph (G H : Group) : Morph G H.
-  Proof.
-    repeat unshelve econstructor.
-    -
-      intro; exact neutr.
-    -
-      intros x y H1.
-      reflexivity.
-    -
-      intros.
-      rewrite (op_neutr_l).
-      reflexivity.
-  Defined.
-
-End Group_Morph_trivial.
-
-Instance comp `(g : @Morph G H) `(f : @Morph F G) : Morph F H.
-Proof.
-  repeat unshelve econstructor.
-  -
-    intro x.
-    apply morph.
-    apply morph.
-    exact x.
-  -
-    intros x y H1.
-    rewrite H1.
-    f_equiv.
-  -
-    intros.
-    simpl.
-    etransitivity.
-
-    apply morph_combat.
-    apply morph_op.
-
-    apply morph_op.
-Defined.
-
+(** The automorphisms of a group form a group. *)
 Instance Auto_Group `{G : Group} : Group.
 Proof.
   unshelve refine {|
