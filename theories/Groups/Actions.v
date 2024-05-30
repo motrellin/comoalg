@@ -23,7 +23,7 @@ Generalizable Variables G X Y.
 Class Action (G : Group) (X : Setoid) :=
   {
     action : @carr G -> @carr X -> @carr X;
-    action_combat :: Proper (carreq ==> carreq ==> carreq) action;
+    action_compat :: Proper (carreq ==> carreq ==> carreq) action;
     action_neutr : 
       forall x,
         carreq (action neutr x) x;
@@ -43,7 +43,7 @@ Defined.
 Class Equivariance `(@Action G X) `(@Action G Y) :=
   {
     equivariance : @carr X -> @carr Y;
-    equivariance_combat :: Proper (carreq ==> carreq) equivariance;
+    equivariance_compat :: Proper (carreq ==> carreq) equivariance;
     equivariance_action : 
       forall g x,
         carreq (equivariance (action g x)) (action g (equivariance x))

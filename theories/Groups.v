@@ -25,7 +25,7 @@ Generalizable Variables F G H.
 
 A [Group] is defined on top of some base [Setoid] (via [base_Setoid]). It
 consists of some operation [op], which is (again) compatible with the equality
-relations [carreq] of the carriers [carr], see [op_combat]. This operation
+relations [carreq] of the carriers [carr], see [op_compat]. This operation
 should be associatve, see [op_assoc].
 
 A group also has some (left) neutral element [neutr] s.t. [op_neutr_l] holds.
@@ -38,7 +38,7 @@ Class Group :=
   {
     base_Setoid :: Setoid;
     op : carr -> carr -> carr;
-    op_combat :: Proper (carreq ==> carreq ==> carreq) op;
+    op_compat :: Proper (carreq ==> carreq ==> carreq) op;
     op_assoc :
       forall x y z,
         (op x (op y z)) =s= (op (op x y) z);
@@ -183,7 +183,7 @@ Section Group_Properties.
     transitivity (op (inv y) y).
     rewrite op_inv_l; reflexivity.
     rewrite <- op_assoc.
-    apply op_combat.
+    apply op_compat.
     reflexivity.
     rewrite op_assoc.
     rewrite op_inv_l.
@@ -323,7 +323,7 @@ Proof.
     simpl.
     etransitivity.
 
-    apply morph_combat.
+    apply morph_compat.
     apply morph_op.
 
     apply morph_op.

@@ -72,7 +72,7 @@ Section subgroup.
         etransitivity; eassumption.
     -
       intros [x1 H1] [x2 H2] H3 [y1 H4] [y2 H5] H6.
-      apply op_combat.
+      apply op_compat.
       all: assumption.
     -
       intros [x H1] [y H2] [z H3].

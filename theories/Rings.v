@@ -24,7 +24,7 @@ Class Ring :=
   {
     base_Abelian :: Abelian_Group;
     mul : @carr base_Abelian -> @carr base_Abelian -> @carr base_Abelian;
-    mul_combat :: Proper (carreq ==> carreq ==> carreq) mul;
+    mul_compat :: Proper (carreq ==> carreq ==> carreq) mul;
     mul_assoc :
       forall x y z,
         (mul x (mul y z)) =s= (mul (mul x y) z);

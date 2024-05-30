@@ -78,7 +78,7 @@ Proof.
   -
     intros x y H1.
     simpl.
-    apply morph_combat.
+    apply morph_compat.
     eassumption.
   -
     intros x y.

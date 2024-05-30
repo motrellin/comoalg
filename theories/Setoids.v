@@ -50,7 +50,7 @@ carriers, that must be compatible with the equatily relations [carreq].
 Class Setoid_Morph (X Y : Setoid) := 
   {
     morph : @carr X -> @carr Y; 
-    morph_combat :: Proper (carreq ==> carreq) morph
+    morph_compat :: Proper (carreq ==> carreq) morph
   }.
 
 Section predicates.
