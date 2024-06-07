@@ -371,7 +371,7 @@ End Group_Morph_trivial.
 
 (** *** Composition of morphisms *)
 
-Instance comp `(g : @Morph G H) `(f : @Morph F G) : Morph F H.
+Definition comp `(g : @Morph G H) `(f : @Morph F G) : Morph F H.
 Proof.
   unshelve eapply Build_Morph'.
   -
@@ -382,7 +382,7 @@ Proof.
   -
     intros x y H1.
     rewrite H1.
-    f_equiv.
+    reflexivity.
   -
     intros.
     simpl.
@@ -430,7 +430,7 @@ Section Morph_Properties.
 End Morph_Properties.
 
 (** The automorphisms of a group form a group. *)
-Instance Auto_Group `{G : Group} : Group.
+Definition Auto_Group `{G : Group} : Group.
 Proof.
   unshelve refine {|
     base_Setoid := {|
