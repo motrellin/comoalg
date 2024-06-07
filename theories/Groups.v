@@ -289,6 +289,18 @@ Module Integers.
 
   Definition Z0 : Z := (0,0).
 
+  Lemma diffeq_0 :
+    forall a b,
+      diffeq (a,b) Z0 <->
+      a = b.
+  Proof.
+    intros; split; intro H1.
+    -
+      inversion H1; subst; lia.
+    -
+      subst; constructor; lia.
+  Qed.
+
   Definition invZ (x : Z) : Z :=
     let (a,b) := x in
     (b,a).
