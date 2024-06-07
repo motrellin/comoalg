@@ -52,6 +52,29 @@ Class Group :=
         (op (inv x) x) =s= neutr
   }.
 
+Definition Build_Group' 
+  carr
+  carreq
+  carreq_equiv
+  op
+  op_compat
+  op_assoc
+  neutr
+  op_neutr_l
+  inv
+  op_inv_l
+  : Group :=
+  {|
+    base_Setoid := Build_Setoid carr carreq carreq_equiv;
+    op := op;
+    op_compat := op_compat;
+    op_assoc := op_assoc;
+    neutr := neutr;
+    op_neutr_l := op_neutr_l;
+    inv := inv;
+    op_inv_l := op_inv_l
+  |}.
+
 (* Some stuff on notations: *)
 Coercion base_Setoid : Group >-> Setoid.
 Declare Scope group_scope.
@@ -207,6 +230,37 @@ Class Abelian_Group :=
         x * y =s= y * x
   }.
 
+Definition Build_Abelian_Group'
+  carr
+  carreq
+  carreq_equiv
+  op
+  op_compat
+  op_assoc
+  neutr
+  op_neutr_l
+  inv
+  op_inv_l
+  op_comm
+  : Abelian_Group :=
+  {|
+    base_Group :=
+      Build_Group'
+        carr
+        carreq
+        carreq_equiv
+        op
+        op_compat
+        op_assoc
+        neutr
+        op_neutr_l
+        inv
+        op_inv_l;
+    op_comm := op_comm
+  |}.
+
+
+
 (* Again some notation: *)
 Coercion base_Group : Abelian_Group >-> Group.
 Declare Scope abelian_scope.
@@ -281,6 +335,17 @@ Class Morph (domain codomain : Group) :=
         morph (x * y) =s= (morph x) * (morph y)
   }.
 
+Definition Build_Morph'
+  {G H}
+  morph
+  morph_compat
+  morph_op
+  : Morph G H :=
+  {|
+    base_Morph := Build_Setoid_Morph G H morph morph_compat;
+    morph_op := morph_op
+  |}.
+
 Coercion base_Morph : Morph >-> Setoid_Morph.
 
 (** ** Examples *)
@@ -290,7 +355,7 @@ Module Group_Morph_trivial.
 
   Instance trivial_Morph (G H : Group) : Morph G H.
   Proof.
-    repeat unshelve econstructor.
+    unshelve eapply Build_Morph'.
     -
       intro; exact neutr.
     -
@@ -308,7 +373,7 @@ End Group_Morph_trivial.
 
 Instance comp `(g : @Morph G H) `(f : @Morph F G) : Morph F H.
 Proof.
-  repeat unshelve econstructor.
+  unshelve eapply Build_Morph'.
   -
     intro x.
     apply morph.
