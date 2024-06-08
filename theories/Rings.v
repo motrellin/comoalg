@@ -17,7 +17,7 @@
  *)
 
 From CoMoAlg Require Export Groups.
-From Coq Require Export Classical PeanoNat.
+From Coq Require Export Classical PeanoNat Decidable.
 Import PeanoNat.Nat.
 
 Open Scope abelian_scope.
@@ -43,9 +43,77 @@ Coercion base_Abelian : Ring >-> Abelian_Group.
 Declare Scope ring_scope.
 
 Infix "*" := mul : ring_scope.
-Notation "0" := neutr (only parsing) : ring_scope.
+Notation "0" := neutr : ring_scope.
 
 Open Scope ring_scope.
+
+(** ** Properties of Rings *)
+
+Section Ring_Properties.
+
+  Context `{Ring}.
+
+  Lemma mul_0_l : 
+    forall r,
+      0 * r =s= 0.
+  Proof.
+    intro r.
+    unshelve eapply shorten_r.
+    apply mul; [exact 0 | exact r].
+    transitivity ((0 + 0) * r).
+    
+    rewrite mul_op_distr_2; reflexivity.
+
+    rewrite op_neutr_l.
+    rewrite op_neutr_r.
+    reflexivity.
+  Qed.
+
+  Lemma mul_0_r : 
+    forall r,
+      r * 0 =s= 0.
+  Proof.
+    intro r.
+    unshelve eapply shorten_l.
+    apply mul; [exact r | exact 0].
+    transitivity (r * (0 + 0)).
+    
+    rewrite mul_op_distr_1; reflexivity.
+
+    rewrite op_neutr_l.
+    rewrite op_neutr_l.
+    reflexivity.
+  Qed.
+
+  Lemma mul_inv_l : 
+    forall x y,
+      (- x) * y =s= - (x * y).
+  Proof.
+    intros x y.
+    unshelve eapply shorten_r.
+    apply mul; [exact x | exact y].
+    rewrite op_inv_r.
+    rewrite <- mul_op_distr_2.
+    rewrite op_inv_r.
+    rewrite mul_0_l.
+    reflexivity.
+  Qed.
+
+  Lemma mul_inv_r : 
+    forall x y,
+      x * (- y) =s= - (x * y).
+  Proof.
+    intros x y.
+    unshelve eapply shorten_l.
+    apply mul; [exact x | exact y].
+    rewrite op_inv_l.
+    rewrite <- mul_op_distr_1.
+    rewrite op_inv_l.
+    rewrite mul_0_r.
+    reflexivity.
+  Qed.
+
+End Ring_Properties.
 
 Definition nullteiler `{Ring} (x : carr) := 
   exists r, 
@@ -59,6 +127,7 @@ Class Integrity_Ring :=
       forall x y,
         x * y =s= y * x;
     one : carr;
+    one_neq_0 : ~ one =s= 0;
     mul_one_l : 
       forall x,
         one * x =s= x;
@@ -67,6 +136,39 @@ Class Integrity_Ring :=
         nullteiler x ->
         x =s= 0
   }.
+
+Section Integrity_Ring_Properties.
+
+  Context `{Integrity_Ring}.
+
+  Lemma mul_0 : 
+    forall x y,
+      x * y =s= 0 ->
+      x =s= 0 \/ y =s= 0.
+  Proof.
+    intros x y H1.
+    Locate decidable.
+    assert (H2 : forall x y, decidable (x =s= y)).
+    admit. (* TODO *)
+    destruct (H2 x 0) as [H3|H3], (H2 y 0) as [H4|H4].
+    all: try tauto.
+    left.
+    apply nullteilerfrei.
+    red.
+    firstorder.
+  Admitted.
+
+  Lemma mul_neq_0 : 
+    forall x y,
+      ~ (x =s= 0) ->
+      ~ (y =s= 0) ->
+      ~ (x * y =s= 0).
+  Proof.
+    intros x y H1 H2 H3.
+    firstorder using mul_0.
+  Qed.
+    
+End Integrity_Ring_Properties.
 
 Module Z.
 
@@ -104,48 +206,51 @@ Module Z.
       one := (1,0)
     |}.
     all: try ((repeat intros []); simpl; constructor; lia).
-    intros [a b] [[c d] [H1 H2]].
-    simpl in *.
-    inversion H2 as [a' b' c' d' H3 [eq1 eq2] [eq3 eq4]].
-    subst.
-    constructor.
-    f_equal.
-    do 2 rewrite PeanoNat.Nat.add_0_r in H3.
-    assert (H4 : c <> d).
-    {
-      intros H4.
-      apply diffeq_0 in H4.
-      contradiction.
-    }
-    clear H1 H2.
-    generalize dependent b.
-    induction a as [|a' IH].
-    all: intros b H5.
     -
+      inversion 1; subst; lia.
+    -
+      intros [a b] [[c d] [H1 H2]].
       simpl in *.
-      destruct b as [|b'].
+      inversion H2 as [a' b' c' d' H3 [eq1 eq2] [eq3 eq4]].
+      subst.
+      constructor.
+      f_equal.
+      do 2 rewrite PeanoNat.Nat.add_0_r in H3.
+      assert (H4 : c <> d).
+      {
+        intros H4.
+        apply diffeq_0 in H4.
+        contradiction.
+      }
+      clear H1 H2.
+      generalize dependent b.
+      induction a as [|a' IH].
+      all: intros b H5.
       +
-        reflexivity.
+        simpl in *.
+        destruct b as [|b'].
+        *
+          reflexivity.
+        *
+          exfalso; apply H4.
+          apply -> mul_cancel_l.
+          symmetry.
+          exact H5.
+          easy.
       +
-        exfalso; apply H4.
-        apply -> mul_cancel_l.
-        symmetry.
-        exact H5.
-        easy.
-    -
-      destruct b as [|b'].
-      +
-        assert (H6 : c + a' * c = d + a' * d). lia. clear H5.
-        exfalso; apply H4.
-        assert (H7 : S a' * c = S a' * d). lia. clear H6.
-        apply -> mul_cancel_l.
-        exact H7.
-        easy.
-      +
-        f_equal.
-        apply IH.
-        simpl in H5.
-        lia.
+        destruct b as [|b'].
+        *
+          assert (H6 : c + a' * c = d + a' * d). lia. clear H5.
+          exfalso; apply H4.
+          assert (H7 : S a' * c = S a' * d). lia. clear H6.
+          apply -> mul_cancel_l.
+          exact H7.
+          easy.
+        *
+          f_equal.
+          apply IH.
+          simpl in H5.
+          lia.
   Defined.
 
 End Z.
