@@ -115,6 +115,21 @@ Section Ring_Properties.
 
 End Ring_Properties.
 
+Class Unital_Ring `(Ring) :=
+  {
+    one : carr;
+    mul_one_l : 
+      forall x,
+        one * x =s= x;
+  }.
+
+Class Commutative_Ring `(Ring) :=
+  {
+    mul_comm :
+      forall x y,
+        x * y =s= y * x
+  }.
+
 Definition nullteiler `{Ring} (x : carr) := 
   exists r, 
     ~ (r =s= 0) /\
@@ -123,14 +138,9 @@ Definition nullteiler `{Ring} (x : carr) :=
 Class Integrity_Ring :=
   {
     base_Ring :: Ring;
-    mul_comm : 
-      forall x y,
-        x * y =s= y * x;
-    one : carr;
+    commutative :: Commutative_Ring base_Ring;
+    unital :: Unital_Ring base_Ring;
     one_neq_0 : ~ one =s= 0;
-    mul_one_l : 
-      forall x,
-        one * x =s= x;
     nullteilerfrei :
       forall x,
         nullteiler x ->
@@ -203,9 +213,11 @@ Module Z.
   Proof.
     unshelve refine {|
       base_Ring := Z_Ring;
+    |}.
+    refine {|
       one := (1,0)
     |}.
-    all: try ((repeat intros []); simpl; constructor; lia).
+    all: try (try constructor; (repeat intros []); simpl; constructor; lia).
     -
       inversion 1; subst; lia.
     -

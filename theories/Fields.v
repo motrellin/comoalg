@@ -378,6 +378,12 @@ Section quot_field.
       apply mul_assoc.
   Defined.
 
+  Definition Quot_Commutative_Ring : Commutative_Ring Quot_Ring.
+  Proof.
+    constructor.
+    exact mulQ_comm.
+  Defined.
+
   Definition Q1 : Q.
   Proof.
     split.
@@ -388,12 +394,25 @@ Section quot_field.
       exact one_neq_0.
   Defined.
 
+  Definition Quot_Unital_Ring : Unital_Ring Quot_Ring.
+  Proof.
+    unshelve econstructor.
+    exact Q1.
+    simpl.
+    intros [a [b H1]].
+    constructor.
+    simpl.
+    do 2 rewrite <- mul_assoc.
+    rewrite mul_comm with (x := a) (y := b).
+    reflexivity.
+  Defined.
+
   Definition Quot_Integrity_Ring : Integrity_Ring.
   Proof.
     refine {|
       base_Ring := Quot_Ring;
-      mul_comm := mulQ_comm;
-      one := Q1
+      commutative := Quot_Commutative_Ring;
+      unital := Quot_Unital_Ring;
     |}.
     -
       simpl.
@@ -404,11 +423,6 @@ Section quot_field.
       rewrite mul_0_r in H2.
       apply mul_0 in H2.
       destruct H2 as [H2|H2]; contradict H2; exact one_neq_0.
-    -
-      intros [a [b H1]]; constructor; simpl.
-      do 2 rewrite <- mul_assoc.
-      rewrite mul_comm with (x := a) (y := b).
-      reflexivity.
     -
       intros [a [b H1]] [[c [d H2]] [H3 H4]].
       constructor.
