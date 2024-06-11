@@ -129,6 +129,92 @@ Class Unital_Ring `(Ring) :=
 
 Notation "1" := one : ring_scope.
 
+Section units.
+
+  Context `{Unital_Ring}.
+
+  Definition unit (x : carr) :=
+    {r : carr |
+      x * r =s= 1 /\
+      r * x =s= 1
+    }.
+
+  Definition unit_Setoid : Setoid.
+  Proof.
+    unshelve econstructor.
+    -
+      exact {x : carr & unit x}.
+    -
+      intros [x H1] [y H2].
+      apply carreq.
+      exact x.
+      exact y.
+    -
+      split.
+      all: repeat intros [].
+      reflexivity.
+      symmetry; assumption.
+      etransitivity; eauto.
+  Defined.
+
+  Definition unit_Group : Group.
+  Proof.
+    unshelve refine {|
+      base_Setoid := unit_Setoid
+    |}.
+    -
+      intros [x H1] [y H2].
+      exists (x * y).
+      destruct H1 as [x' [H11 H12]], H2 as [y' [H21 H22]].
+      exists (y' * x').
+      split.
+      +
+        rewrite mul_assoc.
+        rewrite <- mul_assoc with (x := x).
+        rewrite H21.
+        rewrite <- mul_assoc.
+        rewrite mul_one_l.
+        rewrite H11.
+        reflexivity.
+      +
+        rewrite mul_assoc.
+        rewrite <- mul_assoc with (x := y').
+        rewrite H12.
+        rewrite <- mul_assoc.
+        rewrite mul_one_l.
+        rewrite H22.
+        reflexivity.
+    -
+      exists 1.
+      exists 1.
+      split.
+      all: rewrite mul_one_l.
+      all: reflexivity.
+    -
+      intros [x [x' [H1 H2]]].
+      exists x'.
+      exists x.
+      split; assumption.
+    -
+      intros [x1 H1] [x2 H2] eqx [y1 H3] [y2 H4] eqy.
+      simpl in *.
+      f_equiv; assumption.
+    -
+      intros [x H1] [y H2] [z H3].
+      simpl.
+      apply mul_assoc.
+    -
+      intros [].
+      apply mul_one_l.
+    -
+      intros [x [x' [H1 H2]]].
+      simpl.
+      assumption.
+  Defined.
+
+End units.
+
+
 (** * Commutative Rings *)
 
 Class Commutative_Ring `(Ring) :=
