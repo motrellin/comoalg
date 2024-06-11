@@ -127,6 +127,8 @@ Class Unital_Ring `(Ring) :=
         one * x =s= x;
   }.
 
+Notation "1" := one : ring_scope.
+
 (** * Commutative Rings *)
 
 Class Commutative_Ring `(Ring) :=
@@ -148,7 +150,7 @@ Class Integrity_Ring :=
     base_Ring :: Ring;
     commutative :: Commutative_Ring base_Ring;
     unital :: Unital_Ring base_Ring;
-    one_neq_0 : ~ one =s= 0;
+    one_neq_0 : ~ 1 =s= 0;
     nullteilerfrei :
       forall x,
         nullteiler x ->

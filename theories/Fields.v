@@ -21,9 +21,9 @@ From CoMoAlg Require Export Rings.
 Class Field :=
   {
     base_Integrity_Ring :: Integrity_Ring;
-    invM : {x : carr | ~ (x =s= neutr)} -> carr;
+    invM : {x : carr | ~ (x =s= 0)} -> carr;
     mul_div_l : 
-    forall (x : {x : carr | ~ (x =s= neutr)}),
-      (invM x) * (proj1_sig x) =s= one
+    forall (x : {x : carr | ~ (x =s= 0)}),
+      (invM x) * (proj1_sig x) =s= 1
   }.
 

@@ -206,7 +206,7 @@ Section quot_field.
     -
       exact 0.
     -
-      exists one.
+      exists 1.
       exact one_neq_0.
   Defined.
 
@@ -411,9 +411,9 @@ Section quot_field.
   Proof.
     split.
     -
-      exact one.
+      exact 1.
     -
-      exists one.
+      exists 1.
       exact one_neq_0.
   Defined.
 
