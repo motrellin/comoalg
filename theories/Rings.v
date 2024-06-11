@@ -226,7 +226,7 @@ Class Commutative_Ring `(Ring) :=
 
 (** * Integrity Rings *)
 
-Definition nullteiler `{Ring} (x : carr) := 
+Definition zero_divisor `{Ring} (x : carr) := 
   exists r, 
     ~ (r =s= 0) /\
     x * r =s= 0.
@@ -237,9 +237,9 @@ Class Integrity_Ring :=
     commutative :: Commutative_Ring base_Ring;
     unital :: Unital_Ring base_Ring;
     one_neq_0 : ~ 1 =s= 0;
-    nullteilerfrei :
+    zero_divisor_free :
       forall x,
-        nullteiler x ->
+        zero_divisor x ->
         x =s= 0
   }.
 
@@ -261,7 +261,7 @@ Section Integrity_Ring_Properties.
     destruct (H2 x 0) as [H3|H3], (H2 y 0) as [H4|H4].
     all: try tauto.
     left.
-    apply nullteilerfrei.
+    apply zero_divisor_free.
     red.
     firstorder.
   Admitted.
