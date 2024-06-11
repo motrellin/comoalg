@@ -22,6 +22,8 @@ Import PeanoNat.Nat.
 
 Open Scope abelian_scope.
 
+(** * Rings *)
+
 Class Ring :=
   {
     base_Abelian :: Abelian_Group;
@@ -115,6 +117,8 @@ Section Ring_Properties.
 
 End Ring_Properties.
 
+(** * Unital Rings *)
+
 Class Unital_Ring `(Ring) :=
   {
     one : carr;
@@ -123,12 +127,16 @@ Class Unital_Ring `(Ring) :=
         one * x =s= x;
   }.
 
+(** * Commutative Rings *)
+
 Class Commutative_Ring `(Ring) :=
   {
     mul_comm :
       forall x y,
         x * y =s= y * x
   }.
+
+(** * Integrity Rings *)
 
 Definition nullteiler `{Ring} (x : carr) := 
   exists r, 
@@ -146,6 +154,8 @@ Class Integrity_Ring :=
         nullteiler x ->
         x =s= 0
   }.
+
+(** ** Properties of Integrity Rings *)
 
 Section Integrity_Ring_Properties.
 
@@ -179,6 +189,9 @@ Section Integrity_Ring_Properties.
   Qed.
     
 End Integrity_Ring_Properties.
+
+(** ** Examples *)
+(** *** Integers *)
 
 Module Z.
 
