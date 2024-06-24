@@ -214,6 +214,28 @@ Section Group_Properties.
     reflexivity.
   Qed.
 
+  Lemma inv_inv : 
+    forall x,
+      inv (inv x) =s= x.
+  Proof.
+    intros x.
+    unshelve eapply shorten_l.
+    apply inv; exact x.
+    rewrite op_inv_l, op_inv_r.
+    reflexivity.
+  Qed.
+
+  #[export] Instance inv_compat : Proper (carreq ==> carreq) inv.
+  Proof.
+    intros x y H1.
+    apply shorten_l with (z := x).
+    rewrite op_inv_l.
+    rewrite H1.
+    rewrite op_inv_l.
+    reflexivity.
+  Defined.
+
+
 End Group_Properties.
 
 (** * Abelian Groups

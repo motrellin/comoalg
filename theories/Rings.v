@@ -139,6 +139,14 @@ Section units.
       r * x =s= 1
     }.
 
+  Example one_unit : unit 1.
+  Proof.
+    exists 1.
+    split.
+    all: rewrite mul_one_l.
+    all: reflexivity.
+  Qed.
+
   Definition unit_Setoid : Setoid.
   Proof.
     unshelve econstructor.
@@ -212,6 +220,30 @@ Section units.
       assumption.
   Defined.
 
+  Corollary unit_mul_one_r : 
+    forall x,
+      unit x ->
+      x * 1 =s= x.
+  Proof.
+    intros x H1.
+    exact (@op_neutr_r unit_Group (existT _ x H1)).
+  Qed.
+
+  Corollary unit_one_unique : 
+    forall e,
+      unit e ->
+      (forall x, e * x =s= x) ->
+      e =s= 1.
+  Proof.
+    intros e H1 H2.
+    apply (@neutr_unique unit_Group (existT _ e H1)).
+    intros [x H3].
+    simpl.
+    exact (H2 x).
+  Qed.
+
+  (*TODO: Add the rest. *)
+
 End units.
 
 
@@ -242,6 +274,8 @@ Class Integrity_Ring :=
         zero_divisor x ->
         x =s= 0
   }.
+
+Coercion base_Ring : Integrity_Ring >-> Ring.
 
 (** ** Properties of Integrity Rings *)
 
