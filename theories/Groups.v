@@ -361,9 +361,9 @@ Group Morphisms are Setoid Morphism that respect the equality relations
 [carreq] which is declared via [morph_op].
  *)
 
-Class Morph (domain codomain : Group) :=
+Class Group_Morph (domain codomain : Group) :=
   {
-    base_Morph :: Setoid_Morph domain codomain;
+    base_Setoid_Morph :: Setoid_Morph domain codomain;
     morph_op :
       forall x y,
         morph (x * y) =s= (morph x) * (morph y)
@@ -374,20 +374,20 @@ Definition Build_Morph'
   morph
   morph_compat
   morph_op
-  : Morph G H :=
+  : Group_Morph G H :=
   {|
-    base_Morph := Build_Setoid_Morph G H morph morph_compat;
+    base_Setoid_Morph := Build_Setoid_Morph G H morph morph_compat;
     morph_op := morph_op
   |}.
 
-Coercion base_Morph : Morph >-> Setoid_Morph.
+Coercion base_Setoid_Morph : Group_Morph >-> Setoid_Morph.
 
 (** ** Examples *)
 (** *** Trivial Morphisms *)
 
 Module Group_Morph_trivial.
 
-  Instance trivial_Morph (G H : Group) : Morph G H.
+  Instance trivial_Morph (G H : Group) : Group_Morph G H.
   Proof.
     unshelve eapply Build_Morph'.
     -
@@ -405,7 +405,7 @@ End Group_Morph_trivial.
 
 (** *** Composition of morphisms *)
 
-Definition comp `(g : @Morph G H) `(f : @Morph F G) : Morph F H.
+Definition comp `(g : @Group_Morph G H) `(f : @Group_Morph F G) : Group_Morph F H.
 Proof.
   unshelve eapply Build_Morph'.
   -
@@ -432,7 +432,7 @@ Defined.
 
 Section Morph_Properties.
 
-  Context `{Morph}.
+  Context `{Group_Morph}.
 
   Lemma morph_neutr :
     morph neutr =s= neutr.
@@ -468,7 +468,7 @@ Definition Auto_Group `{G : Group} : Group.
 Proof.
   unshelve refine {|
     base_Setoid := {|
-      carr := {phi : Morph G G & bijective phi};
+      carr := {phi : Group_Morph G G & bijective phi};
       carreq :=
         fun phi psi =>
         let f := @morph _ _ (projT1 phi) in
@@ -524,7 +524,7 @@ Proof.
   -
     simpl.
     unshelve eexists {|
-      base_Morph := {|
+      base_Setoid_Morph := {|
         morph := fun x => x
       |}
     |}.
@@ -545,7 +545,7 @@ Proof.
     intros [phi H1].
     destruct H1 as [phi' [H1 H2]].
     unshelve eexists {|
-      base_Morph := phi'
+      base_Setoid_Morph := phi'
     |}.
     +
       intros x y.

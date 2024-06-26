@@ -20,7 +20,7 @@ From CoMoAlg Require Export Groups.
 
 Generalizable Variables G H.
 
-#[refine] Instance equiv_Group `(phi : Morph) : Group :=
+#[refine] Instance equiv_Group `(phi : Group_Morph) : Group :=
   {|
     base_Setoid := {|
       carr := carr;
@@ -66,10 +66,10 @@ Proof.
      reflexivity.
 Defined.
 
-Definition equiv_Morph_surj `(f : @Morph G H) : Morph G (equiv_Group f).
+Definition equiv_Morph_surj `(f : @Group_Morph G H) : Group_Morph G (equiv_Group f).
 Proof.
   unshelve refine {|
-    base_Morph := {|
+    base_Setoid_Morph := {|
       morph := fun x => _
     |}
   |}.
@@ -85,10 +85,10 @@ Proof.
     reflexivity.
 Defined.
 
-Definition equiv_Morph_inj `(f : @Morph G H) : Morph (equiv_Group f) H.
+Definition equiv_Morph_inj `(f : @Group_Morph G H) : Group_Morph (equiv_Group f) H.
 Proof.
   unshelve refine {|
-    base_Morph := {|
+    base_Setoid_Morph := {|
       morph := fun x => _
     |}
   |}.
@@ -108,7 +108,7 @@ Defined.
 
 Section Noether.
 
-  Context `(f : Morph).
+  Context `(f : Group_Morph).
 
   Lemma Noether_commut :
     forall x,
