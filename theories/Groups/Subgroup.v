@@ -16,6 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *)
 
+From Coq Require Import List.
 From CoMoAlg Require Export Groups.
 
 Section subgroup.
@@ -86,3 +87,57 @@ Section subgroup.
   Defined.
 
 End subgroup.
+
+Section easier.
+  Context `(Group).
+
+  Context (subgroup : carr -> Prop).
+  Hypothesis H1 : Proper (carreq ==> iff) subgroup.
+
+  Context (g : carr).
+  Hypothesis H2 : subgroup g.
+
+  Hypothesis H3 : forall a b, subgroup a -> subgroup b -> subgroup (a * inv b).
+
+  Theorem neutr_preserve' :
+    subgroup neutr.
+  Proof.
+    specialize H3 with (a := g) (b := g).
+    rewrite op_inv_r in H3.
+    apply H3.
+    all: assumption.
+  Qed.
+
+  Theorem inv_preserve' :
+    forall x,
+      subgroup x ->
+      subgroup (inv x).
+  Proof.
+    intros x H4.
+    specialize H3 with (a := neutr) (b := x) as H5.
+    rewrite op_neutr_l in H5.
+    apply H5.
+    -
+      apply neutr_preserve'.
+    -
+      exact H4.
+  Qed.
+  
+  Theorem op_preserve' :
+    forall x y,
+      subgroup x ->
+      subgroup y -> 
+      subgroup (x * y).
+  Proof.
+    intros x y H4 H5.
+    specialize H3 with (a := x) (b := inv y) as H6.
+    rewrite inv_inv in H6.
+    apply H6.
+    -
+      exact H4.
+    -
+      apply inv_preserve'.
+      exact H5.
+  Qed.
+
+End easier.
